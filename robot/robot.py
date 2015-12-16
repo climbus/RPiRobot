@@ -4,6 +4,7 @@ class Robot(object):
     default_speed = 255;
     motors = []
     led = None
+    button = None
 
     def set_led(self, led):
         self.led = led
@@ -91,7 +92,7 @@ class Button(object):
         GPIO.setup(pin, GPIO.IN)
 
     def is_pressed(self):
-        return GPIO.input()
+        return GPIO.input(self.pin)
 
 
 robot = Robot()
@@ -99,6 +100,10 @@ robot.set_led(Led(14, 15, 18))
 robot.led.set_color((255, 0, 0))
 robot.led.on()
 
+robot.set_button(Button(23))
+
 while True:
-    pass
+    if robot.button.is_pressed():
+        robot.led.set_color((0, 255, 0))
+        robot.led.on()
 
