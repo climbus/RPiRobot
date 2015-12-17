@@ -1,4 +1,9 @@
-import RPi.GPIO as GPIO
+
+try:
+    import RPi.GPIO as GPIO
+except RuntimeError:
+    def GPIO():
+        pass
 
 
 class Led(object):
@@ -6,16 +11,18 @@ class Led(object):
     """RGB Led control module."""
 
     color = (0, 0, 0)
+    __gpio_module__ = GPIO
 
     def __init__(self, red_pin, green_pin, blue_pin):
         """Module constructor."""
+        self.gpio = self.__gpio_module__
         self.red_pin = red_pin
         self.green_pin = green_pin
         self.blue_pin = blue_pin
 
-        self.red = GPIO.PWM(red_pin, 100)
-        self.green = GPIO.PWM(green_pin, 100)
-        self.blue = GPIO.PWM(blue_pin, 100)
+        self.red = self.gpio.PWM(red_pin, 100)
+        self.green = self.gpio.PWM(green_pin, 100)
+        self.blue = self.gpio.PWM(blue_pin, 100)
 
         self.red.start(0)
         self.green.start(0)
