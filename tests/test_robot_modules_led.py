@@ -37,5 +37,22 @@ class TestLed(unittest.TestCase):
     def test_reverse(self):
         self.assertEqual(self.led.reverse(0), 255)
 
+    def test_init(self):
+        red_pin = 1
+        green_pin = 2
+        blue_pin = 3
+        led = Led(red_pin, green_pin, blue_pin)
+        self.assertEqual(led.__gpio_module__, led.gpio)
+
+        self.assertEqual(led.red_pin, red_pin)
+        self.assertEqual(led.green_pin, green_pin)
+        self.assertEqual(led.blue_pin, blue_pin)
+
+        self.assertEqual(led.gpio.PWM.call_count, 3)
+
+        self.assertTrue(led.red.start.called)
+        self.assertTrue(led.green.start.called)
+        self.assertTrue(led.blue.start.called)
+
 if __name__ == '__main__':
     unittest.main()

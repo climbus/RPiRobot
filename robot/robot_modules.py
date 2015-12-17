@@ -3,6 +3,7 @@ try:
     import RPi.GPIO as GPIO
 except RuntimeError:
     def GPIO():
+        """Dummy GPIO replacement."""
         pass
 
 
@@ -94,11 +95,14 @@ class Button(object):
 
     """Button module."""
 
+    __gpio_module__ = GPIO
+
     def __init__(self, pin):
         """Button constructor."""
+        self.gpio = self.__gpio_module__
         self.pin = pin
-        GPIO.setup(pin, GPIO.IN)
+        self.gpio.setup(pin, self.gpio.IN)
 
     def is_pressed(self):
         """Check if button is pressed."""
-        return GPIO.input(self.pin)
+        return self.gpio.input(self.pin)
