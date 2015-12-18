@@ -40,10 +40,12 @@ class Robot(object):
         self.led.set_color(self.colors[status])
         self.led.on()
         self.status = status
+        if status == 1:
+            self.forward()
 
     def toggle_status(self):
         """Toggle status: on(0), off(-1)."""
         if self.status == -1:
-            self.change_status(0)
+            self.change_status(1)
         else:
             self.change_status(-1)

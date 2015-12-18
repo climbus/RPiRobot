@@ -42,7 +42,8 @@ class TestiRunRobot(unittest.TestCase):
     @patch('rpirobot.run_robot.Led')
     @patch('rpirobot.run_robot.Button')
     @patch('rpirobot.run_robot.Robot')
-    def setUp(self, Led, Button, Robot):
+    @patch('rpirobot.run_robot.Motor')
+    def setUp(self, Led, Button, Robot, Motor):
         self.robot_runner = RobotRunner()
 
     def test_robot_runner(self):
@@ -53,6 +54,9 @@ class TestiRunRobot(unittest.TestCase):
 
     def test_robot_sets_button(self):
         self.assertTrue(self.robot_runner.robot.set_button.called)
+
+    def test_robot_sets_motors(self):
+        self.assertTrue(self.robot_runner.robot.set_motors.called)
 
     def test_run_forever(self):
         tm = time.time()
@@ -93,7 +97,6 @@ class TestiRunRobot(unittest.TestCase):
                 except TimeoutError:
                     pass
             self.assertTrue(subprocess.call.called)
-
 
 if __name__ == '__main__':
     unittest.main()

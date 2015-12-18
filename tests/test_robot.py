@@ -63,21 +63,24 @@ class TestRobot(unittest.TestCase):
         self.assertEqual(self.robot.status, -1)
 
     def test_robot_colud_change_status(self):
+        self._set_motors()
         self.robot.set_led(Mock())
         self.robot.change_status(1)
         self.assertEqual(self.robot.status, 1)
 
     def test_led_changes_color_after_status_chanhe(self):
         self.robot.set_led(Mock())
+        self._set_motors()
         self.robot.change_status(1)
         self.assertTrue(self.robot.led.set_color.called)
         self.assertTrue(self.robot.led.on.called)
 
     def test_could_toggle_status(self):
+        self._set_motors()
         self.robot.set_led(Mock())
         self.robot.status = -1
         self.robot.toggle_status()
-        self.assertEqual(self.robot.status, 0)
+        self.assertEqual(self.robot.status, 1)
         self.robot.toggle_status()
         self.assertEqual(self.robot.status, -1)
 

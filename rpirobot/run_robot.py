@@ -3,7 +3,7 @@ import subprocess
 import RPi.GPIO as GPIO
 
 from robot import Robot
-from robot_modules import Led, Button
+from robot_modules import Led, Button, Motor
 
 
 class RobotRunner(object):
@@ -17,6 +17,7 @@ class RobotRunner(object):
         self.robot.led.set_color((255, 0, 0))
         self.robot.led.on()
         self.robot.set_button(Button(23))
+        self.robot.set_motors(Motor(25, 8, 7), Motor(16, 20, 21))
 
     def run_forever(self):
         """Run program in infinite loop."""
