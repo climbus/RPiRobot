@@ -1,3 +1,5 @@
+import RPi.GPIO as GPIO
+
 from robot import Robot
 from robot_modules import Led, Button
 
@@ -14,10 +16,15 @@ class RobotRunner(object):
         self.robot.set_button(Button(23))
 
     def run_forever(self):
-        while True:
-            if self.robot.button.is_pressed():
-                self.robot.led.set_color((0, 255, 0))
-                self.robot.led.on()
+        try:
+            while True:
+                if self.robot.button.is_pressed():
+                    self.robot.led.set_color((0, 255, 0))
+                    self.robot.led.on()
+        except:
+            pass
+        finally:
+            GPIO.cleanup()
 
 if __name__ == "__main__":
     RobotRunner().run_forever()

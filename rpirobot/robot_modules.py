@@ -3,6 +3,7 @@ import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
 
+
 class Led(object):
 
     """RGB Led control module."""
@@ -17,9 +18,9 @@ class Led(object):
         self.green_pin = green_pin
         self.blue_pin = blue_pin
 
-	self.gpio.setup(red_pin, self.gpio.OUT)
-	self.gpio.setup(green_pin, self.gpio.OUT)
-	self.gpio.setup(blue_pin, self.gpio.OUT)
+        self.gpio.setup(red_pin, self.gpio.OUT)
+        self.gpio.setup(green_pin, self.gpio.OUT)
+        self.gpio.setup(blue_pin, self.gpio.OUT)
 
         self.red = self.gpio.PWM(red_pin, 100)
         self.green = self.gpio.PWM(green_pin, 100)
@@ -28,6 +29,12 @@ class Led(object):
         self.red.start(0)
         self.green.start(0)
         self.blue.start(0)
+
+    def __del__(self):
+        """Cleaning."""
+        self.red.stop()
+        self.green.stop()
+        self.blue.stop()
 
     def set_color(self, color):
         """Set RGB color.

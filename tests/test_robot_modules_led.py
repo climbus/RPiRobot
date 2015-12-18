@@ -48,6 +48,7 @@ class TestLed(unittest.TestCase):
         self.assertEqual(led.green_pin, green_pin)
         self.assertEqual(led.blue_pin, blue_pin)
 
+        self.assertEqual(led.gpio.setup.call_count, 3)
         self.assertEqual(led.gpio.PWM.call_count, 3)
 
         self.assertTrue(led.red.start.called)
@@ -66,6 +67,10 @@ class TestLed(unittest.TestCase):
         self.led.red.ChangeDutyCycle.assert_called_with(50)
 
 
+    def test_stop_on_del(self):
+        red = self.led.red
+        del(self.led)
+        self.assertEqual(red.stop.call_count, 3)
 
 if __name__ == '__main__':
     unittest.main()
