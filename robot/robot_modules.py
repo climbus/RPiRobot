@@ -59,30 +59,43 @@ class Motor(object):
 
     """Motor module class."""
 
+    __gpio_module__ = GPIO
+
     def __init__(self, enable_pin, input1_pin, input2_pin):
         """Motor constructor."""
+        self.gpio = self.__gpio_module__
+
         self.enable_pin = enable_pin
         self.input1_pin = input1_pin
         self.input2_pin = input2_pin
 
-        GPIO.setup(enable_pin, GPIO.OUT)
-        GPIO.setup(input1_pin, GPIO.OUT)
-        GPIO.setup(input2_pin, GPIO.OUT)
+        self.gpio.setup(enable_pin, self.gpio.OUT)
+        self.gpio.setup(input1_pin, self.gpio.OUT)
+        self.gpio.setup(input2_pin, self.gpio.OUT)
 
-        self.enable = GPIO.PWM(enable_pin, 100)
+        self.enable = self.gpio.PWM(enable_pin, 100)
         self.enable.start(0)
 
     def forward(self, speed):
-        """Run motor forward."""
-        GPIO.output(self.input1_pin, 1)
-        GPIO.output(self.input2_pin, 0)
+        """Run motor forward.
+
+        speed: motor speed 0-100
+        """
+        if speed < 0 or speed > 100:
+            raise TypeError("Speed must be between 0 and 100")
+
+        self.gpio.output(self.input1_pin, 1)
+        self.gpio.output(self.input2_pin, 0)
 
         self.enable.ChangeDutyCycle(speed)
 
     def backward(self, speed=None):
         """Move motor backward."""
-        GPIO.output(self.input1_pin, 0)
-        GPIO.output(self.input2_pin, 1)
+        if speed < 0 or speed > 100:
+            raise TypeError("Speed must be between 0 and 100")
+
+        self.gpio.output(self.input1_pin, 0)
+        self.gpio.output(self.input2_pin, 1)
 
         self.enable.ChangeDutyCycle(speed)
 
