@@ -4,7 +4,7 @@ class Robot(object):
 
     """Robot class."""
 
-    default_speed = 255
+    default_speed = 100
     motors = [None, None]
     led = None
     button = None
