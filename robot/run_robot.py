@@ -15,12 +15,9 @@ class RobotRunner(object):
 
     def run_forever(self):
         while True:
-            pass
+            if self.robot.button.is_pressed():
+                self.robot.led.set_color((0, 255, 0))
+                self.robot.led.on()
 
 if __name__ == "__main__":
-
-
-    while True:
-        if robot.button.is_pressed():
-            robot.led.set_color((0, 255, 0))
-            robot.led.on()
+    RobotRunner().run_forever()
