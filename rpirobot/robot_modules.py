@@ -110,7 +110,12 @@ class Button(object):
         self.gpio = self.__gpio_module__
         self.pin = pin
         self.gpio.setup(pin, self.gpio.IN)
+        self.status = 0
 
     def is_pressed(self):
         """Check if button is pressed."""
-        return self.gpio.input(self.pin)
+        new_status = self.gpio.input(self.pin)
+        if self.status != new_status:
+            self.status = new_status
+            return self.status
+        else: return 0

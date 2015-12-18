@@ -38,6 +38,14 @@ class TestButton(unittest.TestCase):
 
         self.assertEqual(return_val, 0)
 
+    def test_continous_button_press_trigger_only_once(self):
+        self.btn.gpio.input = MagicMock(return_value=1)
+
+        vals = []
+        for i in range(10):
+            vals.append(self.btn.is_pressed())
+
+        self.assertEqual(len([v for v in vals if v == 1]), 1)
 
 if __name__ == '__main__':
     unittest.main()

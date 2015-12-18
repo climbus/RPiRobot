@@ -2,6 +2,7 @@ import sys
 import os
 import unittest
 import time
+import signal
 
 from mock import Mock, patch
 
@@ -10,16 +11,14 @@ sys.path.append(os.path.abspath("rpirobot"))
 from rpirobot.run_robot import RobotRunner
 
 
-from functools import wraps
-import errno
-import os
-import signal
-
 class TimeoutError(Exception):
     pass
 
 
-class timeout:
+class timeout(object):
+
+    """Timeout util."""
+
     def __init__(self, seconds=1, error_message='Timeout'):
         self.seconds = seconds
         self.error_message = error_message
@@ -84,7 +83,6 @@ class TestiRunRobot(unittest.TestCase):
             except TimeoutError:
                 pass
         self.assertTrue(self.robot_runner.robot.button.is_pressed.called)
-
 
 if __name__ == '__main__':
     unittest.main()
