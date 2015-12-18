@@ -26,9 +26,10 @@ class RobotRunner(object):
                 if self.robot.button.is_pressed():
                     self.robot.toggle_status()
                 if self.robot.button.is_hold():
-                    subprocess.call("halt", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except Exception:
-            pass
+                    print("system halt")
+                    subprocess.call("sudo shutdown -h now", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except Exception, e:
+            print(e)
         finally:
             GPIO.cleanup()
 
