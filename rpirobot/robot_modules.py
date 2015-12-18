@@ -34,9 +34,9 @@ class Led(object):
 
     def on(self):
         """Turn led on."""
-        self.red.ChangeDutyCycle(self.reverse(self.color[0]))
-        self.green.ChangeDutyCycle(self.reverse(self.color[1]))
-        self.blue.ChangeDutyCycle(self.reverse(self.color[2]))
+        self.red.ChangeDutyCycle(self.prepare_data(self.reverse(self.color[0])))
+        self.green.ChangeDutyCycle(self.prepare_data(self.reverse(self.color[1])))
+        self.blue.ChangeDutyCycle(self.prepare_data(self.reverse(self.color[2])))
 
     def off(self):
         """Turn led off."""
@@ -48,6 +48,11 @@ class Led(object):
     def reverse(color):
         """Reverse values for katoda led type."""
         return 255 - color
+
+    @staticmethod
+    def prepare_data(val):
+        """Translate 0-255 value to 0-100."""
+        return round((100 * val)/255)
 
 
 class Motor(object):
@@ -118,4 +123,5 @@ class Button(object):
         if self.status != new_status:
             self.status = new_status
             return self.status
-        else: return 0
+        else:
+            return 0

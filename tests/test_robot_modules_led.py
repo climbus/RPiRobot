@@ -54,5 +54,18 @@ class TestLed(unittest.TestCase):
         self.assertTrue(led.green.start.called)
         self.assertTrue(led.blue.start.called)
 
+    def test_prepare_data(self):
+        data = ((255, 100), (0, 0), (127, 50))
+        for i, j in data:
+            self.assertEqual(self.led.prepare_data(i), j)
+
+    def test_val_to_gpio(self):
+        color = (127, 127, 127)
+        self.led.set_color(color)
+        self.led.on()
+        self.led.red.ChangeDutyCycle.assert_called_with(50)
+
+
+
 if __name__ == '__main__':
     unittest.main()
