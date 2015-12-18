@@ -1,4 +1,4 @@
-
+import time
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
@@ -121,6 +121,7 @@ class Button(object):
     """Button module."""
 
     __gpio_module__ = GPIO
+    time_set_status = None
 
     def __init__(self, pin):
         """Button constructor."""
@@ -135,5 +136,17 @@ class Button(object):
         if self.status != new_status:
             self.status = new_status
             return self.status
+        else:
+            return 0
+
+    def is_hold(self):
+        """Check if button is holded by x seconds."""
+        new_status = self.gpio.input(self.pin)
+        if self.status != new_status:
+            self.status = new_status
+            self.time_set_status = time.time()
+        if time.time() - self.time_set_status > 3:
+            self.time_set_status = time.time()
+            return 1
         else:
             return 0

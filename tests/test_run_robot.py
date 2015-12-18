@@ -3,6 +3,7 @@ import os
 import unittest
 import time
 import signal
+import subprocess
 
 from mock import Mock, patch
 
@@ -81,6 +82,18 @@ class TestiRunRobot(unittest.TestCase):
             except TimeoutError:
                 pass
         self.assertTrue(self.robot_runner.robot.button.is_pressed.called)
+
+    def test_system_halt_on_button_hold(self):
+        self.robot_runner.robot.button.is_hold = Mock(return_value=1)
+
+        with patch.object(subprocess, 'call', return_value=None) as subprocess_call:
+            with timeout(seconds=4):
+                try:
+                    self.robot_runner.run_forever()
+                except TimeoutError:
+                    pass
+            self.assertTrue(subprocess.call.called)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,4 +1,7 @@
-import sys, os
+import sys
+import os
+import time
+
 sys.path.append(os.path.abspath("."))
 
 import unittest
@@ -46,6 +49,15 @@ class TestButton(unittest.TestCase):
             vals.append(self.btn.is_pressed())
 
         self.assertEqual(len([v for v in vals if v == 1]), 1)
+
+    def test_is_button_hlod(self):
+        self.btn.gpio.input = MagicMock(return_value=1)
+        tm = time.time()
+        while time.time() - tm < 4:
+            val = self.btn.is_hold()
+            if val == 1:
+                break
+        self.assertEqual(val, 1)
 
 if __name__ == '__main__':
     unittest.main()
