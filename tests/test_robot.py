@@ -56,6 +56,31 @@ class TestRobot(unittest.TestCase):
         self.robot.forward(50)
         self.motor.forward.called_with(50)
 
+    def test_robot_has_status(self):
+        self.assertIsNotNone(self.robot.status)
+
+    def test_robot_starts_with_status(self):
+        self.assertEqual(self.robot.status, -1)
+
+    def test_robot_colud_change_status(self):
+        self.robot.set_led(Mock())
+        self.robot.change_status(1)
+        self.assertEqual(self.robot.status, 1)
+
+    def test_led_changes_color_after_status_chanhe(self):
+        self.robot.set_led(Mock())
+        self.robot.change_status(1)
+        self.assertTrue(self.robot.led.set_color.called)
+        self.assertTrue(self.robot.led.on.called)
+
+    def test_could_toggle_status(self):
+        self.robot.set_led(Mock())
+        self.robot.status = -1
+        self.robot.toggle_status()
+        self.assertEqual(self.robot.status, 0)
+        self.robot.toggle_status()
+        self.assertEqual(self.robot.status, -1)
+
     def _set_motors(self):
         self. motor = Mock()
         self.robot.set_motors(self.motor, self.motor)

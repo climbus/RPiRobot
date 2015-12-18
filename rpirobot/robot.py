@@ -1,4 +1,3 @@
-from robot_modules import Led, Button
 
 
 class Robot(object):
@@ -9,6 +8,8 @@ class Robot(object):
     motors = [None, None]
     led = None
     button = None
+    status = -1
+    colors = {-1: (255, 0, 0), 1: (0, 255, 0), 0: (0, 255, 0)}
 
     def set_led(self, led):
         """Set led object."""
@@ -33,3 +34,16 @@ class Robot(object):
 
         for m in self.motors:
             m.forward(speed)
+
+    def change_status(self, status):
+        """Change status."""
+        self.led.set_color(self.colors[status])
+        self.led.on()
+        self.status = status
+
+    def toggle_status(self):
+        """Toggle status: on(0), off(-1)."""
+        if self.status == -1:
+            self.change_status(0)
+        else:
+            self.change_status(-1)

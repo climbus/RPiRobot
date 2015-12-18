@@ -63,8 +63,7 @@ class TestiRunRobot(unittest.TestCase):
                 pass
         self.assertEqual(int(time.time() - tm), 1)
 
-    def test_change_led_color_on_button_press(self):
-        self.robot_runner.robot.led.reset_mock()
+    def test_toggle_status_on_button_press(self):
         self.robot_runner.robot.button.is_pressed = Mock(return_value=1)
 
         with timeout(seconds=1):
@@ -72,8 +71,7 @@ class TestiRunRobot(unittest.TestCase):
                 self.robot_runner.run_forever()
             except TimeoutError:
                 pass
-        self.assertTrue(self.robot_runner.robot.led.set_color.called)
-        self.assertTrue(self.robot_runner.robot.led.on.called)
+        self.assertTrue(self.robot_runner.robot.toggle_status.called)
 
     def test_check_if_button_pressed(self):
         self.robot_runner.robot.button.reset_mock()
