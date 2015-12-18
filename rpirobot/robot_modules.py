@@ -1,6 +1,7 @@
 
 import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BCM)
 
 class Led(object):
 
@@ -15,6 +16,10 @@ class Led(object):
         self.red_pin = red_pin
         self.green_pin = green_pin
         self.blue_pin = blue_pin
+
+	self.gpio.setup(red_pin, self.gpio.OUT)
+	self.gpio.setup(green_pin, self.gpio.OUT)
+	self.gpio.setup(blue_pin, self.gpio.OUT)
 
         self.red = self.gpio.PWM(red_pin, 100)
         self.green = self.gpio.PWM(green_pin, 100)
