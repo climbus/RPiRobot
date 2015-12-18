@@ -1,10 +1,5 @@
 
-try:
-    import RPi.GPIO as GPIO
-except RuntimeError:
-    def GPIO():
-        """Dummy GPIO replacement."""
-        pass
+import RPi.GPIO as GPIO
 
 
 class Led(object):

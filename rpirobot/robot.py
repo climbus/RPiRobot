@@ -1,4 +1,4 @@
-from .robot_modules import Led, Button
+from robot_modules import Led, Button
 
 
 class Robot(object):

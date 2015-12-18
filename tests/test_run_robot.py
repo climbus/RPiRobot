@@ -6,7 +6,8 @@ import time
 from mock import Mock, patch
 
 sys.path.append(os.path.abspath("."))
-from robot.run_robot import RobotRunner
+sys.path.append(os.path.abspath("rpirobot"))
+from rpirobot.run_robot import RobotRunner
 
 
 from functools import wraps
@@ -38,9 +39,9 @@ class TestiRunRobot(unittest.TestCase):
 
     """Tests for Robot class."""
 
-    @patch('robot.run_robot.Led')
-    @patch('robot.run_robot.Button')
-    @patch('robot.run_robot.Robot')
+    @patch('rpirobot.run_robot.Led')
+    @patch('rpirobot.run_robot.Button')
+    @patch('rpirobot.run_robot.Robot')
     def setUp(self, Led, Button, Robot):
         self.robot_runner = RobotRunner()
 

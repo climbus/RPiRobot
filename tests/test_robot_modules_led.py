@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath("."))
 import unittest
 from mock import Mock
 
-from robot.robot_modules import Led
+from rpirobot.robot_modules import Led
 
 Led.__gpio_module__ = Mock()
 

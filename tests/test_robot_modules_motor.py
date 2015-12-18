@@ -4,7 +4,7 @@ import unittest
 from mock import Mock
 
 sys.path.append(os.path.abspath("."))
-from robot.robot_modules import Motor
+from rpirobot.robot_modules import Motor
 
 Motor.__gpio_module__ = Mock()
 

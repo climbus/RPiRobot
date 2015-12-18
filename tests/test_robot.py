@@ -4,7 +4,8 @@ import unittest
 from mock import Mock
 
 sys.path.append(os.path.abspath("."))
-from robot.robot import Robot
+sys.path.append(os.path.abspath("rpirobot"))
+from rpirobot.robot import Robot
 
 class TestRobot(unittest.TestCase):
 

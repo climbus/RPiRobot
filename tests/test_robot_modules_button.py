@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath("."))
 import unittest
 from mock import Mock, MagicMock
 
-from robot.robot_modules import Button
+from rpirobot.robot_modules import Button
 
 Button.__gpio_module__ = Mock()
 

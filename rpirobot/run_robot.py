@@ -1,5 +1,5 @@
-from .robot import Robot
-from .robot_modules import Led, Button
+from robot import Robot
+from robot_modules import Led, Button
 
 
 class RobotRunner(object):
