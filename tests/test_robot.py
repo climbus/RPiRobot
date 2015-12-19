@@ -104,6 +104,14 @@ class TestRobot(unittest.TestCase):
         self.robot.stop()
         self.assertEqual(self.motor.stop.call_count, 2)
 
+    def test_left(self):
+        self.robot.set_led(Mock())
+        self._set_motors()
+        self.robot.stop = Mock()
+        self.robot.left()
+        self.assertEqual(self.robot.stop.call_count, 1)
+        self.assertEqual(self.motor.forward.call_count, 1)
+
     def _set_motors(self):
         self. motor = Mock()
         self.robot.set_motors(self.motor, self.motor)

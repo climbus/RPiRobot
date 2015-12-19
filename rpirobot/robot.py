@@ -40,6 +40,14 @@ class Robot(object):
         for m in self.motors:
             m.stop()
 
+    def left(self, speed=None, angle=None):
+        """Turn robot left."""
+        if not speed:
+            speed = self.default_speed
+
+        self.stop()
+        self.motors[0].forward(speed)
+
     def change_status(self, status):
         """Change status."""
         self.led.set_color(self.colors[status])
