@@ -3,7 +3,6 @@ import os
 import unittest
 import time
 import signal
-import subprocess
 
 from mock import Mock, patch
 
@@ -59,6 +58,7 @@ class TestiRunRobot(unittest.TestCase):
         self.assertTrue(self.robot_runner.robot.set_motors.called)
 
     def test_run_forever(self):
+        self.robot_runner.robot.button.is_hold = Mock(return_value=0)
         tm = time.time()
 
         with timeout(seconds=1):
@@ -70,6 +70,7 @@ class TestiRunRobot(unittest.TestCase):
 
     def test_toggle_status_on_button_press(self):
         self.robot_runner.robot.button.is_pressed = Mock(return_value=1)
+        self.robot_runner.robot.button.is_hold = Mock(return_value=0)
 
         with timeout(seconds=1):
             try:
@@ -80,6 +81,7 @@ class TestiRunRobot(unittest.TestCase):
 
     def test_check_if_button_pressed(self):
         self.robot_runner.robot.button.reset_mock()
+        self.robot_runner.robot.button.is_hold = Mock(return_value=0)
         with timeout(seconds=1):
             try:
                 self.robot_runner.run_forever()
@@ -87,16 +89,16 @@ class TestiRunRobot(unittest.TestCase):
                 pass
         self.assertTrue(self.robot_runner.robot.button.is_pressed.called)
 
-    def test_system_halt_on_button_hold(self):
+    @patch('rpirobot.run_robot.subprocess')
+    def test_system_halt_on_button_hold(self, subprocess):
         self.robot_runner.robot.button.is_hold = Mock(return_value=1)
 
-        with patch.object(subprocess, 'call', return_value=None) as subprocess_call:
-            with timeout(seconds=4):
-                try:
-                    self.robot_runner.run_forever()
-                except TimeoutError:
-                    pass
-            self.assertTrue(subprocess.call.called)
+        with timeout(seconds=4):
+            try:
+                self.robot_runner.run_forever()
+            except TimeoutError:
+                pass
+        self.assertTrue(subprocess.call.called)
 
 if __name__ == '__main__':
     unittest.main()

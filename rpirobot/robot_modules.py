@@ -142,9 +142,9 @@ class Button(object):
     def is_hold(self):
         """Check if button is holded by x seconds."""
         status = self.gpio.input(self.pin)
-        
+
         if status == 1:
-	    if not self.time_set_status:
+            if not self.time_set_status:
                 self.time_set_status = time.time()
             if time.time() - self.time_set_status > 3:
                 self.time_set_status = time.time()

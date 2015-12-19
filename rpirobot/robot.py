@@ -35,6 +35,11 @@ class Robot(object):
         for m in self.motors:
             m.forward(speed)
 
+    def stop(self):
+        """Stop robot."""
+        for m in self.motors:
+            m.stop()
+
     def change_status(self, status):
         """Change status."""
         self.led.set_color(self.colors[status])
@@ -42,6 +47,8 @@ class Robot(object):
         self.status = status
         if status == 1:
             self.forward()
+        if status == -1:
+            self.stop()
 
     def toggle_status(self):
         """Toggle status: on(0), off(-1)."""
