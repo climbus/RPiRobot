@@ -83,5 +83,10 @@ class TestMotor(unittest.TestCase):
         self.motor.stop()
         self.motor.enable.ChangeDutyCycle.assert_called_with(0)
 
+    def test_colud_calibrate_forward(self):
+        self.motor = Motor(None, None, None, correction=0.5)
+        self.motor.forward(100)
+        self.motor.enable.ChangeDutyCycle.assert_called_with(50)
+
 if __name__ == '__main__':
     unittest.main()

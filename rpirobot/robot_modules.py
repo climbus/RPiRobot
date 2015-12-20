@@ -73,7 +73,7 @@ class Motor(object):
 
     __gpio_module__ = GPIO
 
-    def __init__(self, enable_pin, input1_pin, input2_pin):
+    def __init__(self, enable_pin, input1_pin, input2_pin, correction=1.0):
         """Motor constructor."""
         self.gpio = self.__gpio_module__
 
@@ -87,6 +87,7 @@ class Motor(object):
 
         self.enable = self.gpio.PWM(enable_pin, 100)
         self.enable.start(0)
+        self.correction = correction
 
     def forward(self, speed):
         """Run motor forward.
@@ -99,7 +100,7 @@ class Motor(object):
         self.gpio.output(self.input1_pin, 1)
         self.gpio.output(self.input2_pin, 0)
 
-        self.enable.ChangeDutyCycle(speed)
+        self.enable.ChangeDutyCycle(speed * self.correction)
 
     def backward(self, speed=None):
         """Move motor backward."""
@@ -150,5 +151,5 @@ class Button(object):
                 self.time_set_status = time.time()
                 return 1
         else:
-           self.time_set_status = None
-           return 0
+            self.time_set_status = None
+            return 0
