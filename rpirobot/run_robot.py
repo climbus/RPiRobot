@@ -17,7 +17,7 @@ class RobotRunner(object):
         self.robot.led.set_color((255, 0, 0))
         self.robot.led.on()
         self.robot.set_button(Button(23))
-        self.robot.set_motors(Motor(25, 8, 7), Motor(16, 20, 21))
+        self.robot.set_motors(Motor(16, 20, 21, 1.0), Motor(25, 8, 7, 0.59))
 
     def run_forever(self):
         """Run program in infinite loop."""
