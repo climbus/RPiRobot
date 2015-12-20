@@ -6,9 +6,16 @@ from robot import Robot
 from robot_modules import Led, Button, Motor
 
 
-#17,5 - 50 - 1
-#11,3 - 40 - 1
-#25 - 100 - 1
+# 17,5 - 50 - 1
+# 11,3 - 40 - 1
+# 25 - 100 - 1
+
+class TimeoutError(Exception):
+
+    """Exception for timeout."""
+
+    pass
+
 
 class RobotRunner(object):
 
@@ -33,8 +40,8 @@ class RobotRunner(object):
                     subprocess.call("sudo shutdown -h now", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except TimeoutError:
             pass
-        except Exception as e:
-            pass#print(e)
+        except Exception:
+            pass
         finally:
             GPIO.cleanup()
 

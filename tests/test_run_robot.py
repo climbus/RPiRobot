@@ -8,12 +8,7 @@ from mock import Mock, patch
 
 sys.path.append(os.path.abspath("."))
 sys.path.append(os.path.abspath("rpirobot"))
-from rpirobot.run_robot import RobotRunner
-
-
-class TimeoutError(Exception):
-    pass
-
+from rpirobot.run_robot import RobotRunner, TimeoutError
 
 class timeout(object):
 

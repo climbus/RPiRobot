@@ -1,6 +1,7 @@
 import sys
 import os
 import unittest
+import time
 from mock import Mock
 
 sys.path.append(os.path.abspath("."))
@@ -107,10 +108,71 @@ class TestRobot(unittest.TestCase):
     def test_left(self):
         self.robot.set_led(Mock())
         self._set_motors()
+        self.robot.set_motor(0, Mock())
         self.robot.stop = Mock()
         self.robot.left()
         self.assertEqual(self.robot.stop.call_count, 1)
-        self.assertEqual(self.motor.forward.call_count, 1)
+        self.assertEqual(self.robot.motors[0].forward.call_count, 1)
+
+    def test_right(self):
+        self.robot.set_led(Mock())
+        self._set_motors()
+        self.robot.set_motor(1, Mock())
+        self.robot.stop = Mock()
+        self.robot.right()
+        self.assertEqual(self.robot.stop.call_count, 1)
+        self.assertEqual(self.robot.motors[1].forward.call_count, 1)
+
+    def test_left_default_speed(self):
+        self._set_motors()
+        self.robot.set_motor(0, Mock())
+        self.robot.left()
+        self.robot.motors[0].forward.assert_called_with(self.robot.default_speed)
+
+    def test_left_with_speed(self):
+        self._set_motors()
+        self.robot.set_motor(0, Mock())
+        self.robot.left(50)
+        self.robot.motors[0].forward.assert_called_with(50)
+
+    def test_left_with_angle(self):
+        self._set_motors()
+        self.robot.set_motor(0, Mock())
+        self.robot.stop = Mock()
+        self.robot.width = 13
+        self.robot.cps = 10
+        tm = time.time()
+        self.robot.left(angle=90)
+        self.assertEqual(round(time.time() - tm), 1)
+
+    def test_right_with_angle(self):
+        self._set_motors()
+        self.robot.set_motor(1, Mock())
+        self.robot.stop = Mock()
+        self.robot.width = 13
+        self.robot.cps = 10
+        tm = time.time()
+        self.robot.right(angle=90)
+        self.assertEqual(round(time.time() - tm), 1)
+
+    def test_right_default_speed(self):
+        self._set_motors()
+        self.robot.set_motor(1, Mock())
+        self.robot.right()
+        self.robot.motors[1].forward.assert_called_with(self.robot.default_speed)
+
+    def test_right_with_speed(self):
+        self._set_motors()
+        self.robot.set_motor(1, Mock())
+        self.robot.right(50)
+        self.robot.motors[1].forward.assert_called_with(50)
+
+    def test_forward_with_distance(self):
+        self._set_motors()
+        self.robot.cps = 10
+        tm = time.time()
+        self.robot.forward(distance=10)
+        self.assertEqual(round(time.time() - tm), 1)
 
     def _set_motors(self):
         self. motor = Mock()

@@ -59,5 +59,14 @@ class TestButton(unittest.TestCase):
                 break
         self.assertEqual(val, 1)
 
+    def test_is_not_hold(self):
+        self.btn.gpio.input = MagicMock(return_value=0)
+        tm = time.time()
+        while time.time() - tm < 4:
+            val = self.btn.is_hold()
+            if val == 1:
+                break
+        self.assertEqual(val, 0)
+
 if __name__ == '__main__':
     unittest.main()

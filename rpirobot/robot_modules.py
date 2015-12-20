@@ -110,7 +110,7 @@ class Motor(object):
         self.gpio.output(self.input1_pin, 0)
         self.gpio.output(self.input2_pin, 1)
 
-        self.enable.ChangeDutyCycle(speed)
+        self.enable.ChangeDutyCycle(speed * self.correction)
 
     def stop(self):
         """Stop motor."""

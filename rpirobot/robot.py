@@ -1,3 +1,5 @@
+import time
+import math
 
 
 class Robot(object):
@@ -10,6 +12,9 @@ class Robot(object):
     button = None
     status = -1
     colors = {-1: (255, 0, 0), 1: (0, 255, 0), 0: (0, 255, 0)}
+
+    cps = 35
+    width = 15
 
     def set_led(self, led):
         """Set led object."""
@@ -27,13 +32,17 @@ class Robot(object):
         """Set button object."""
         self.button = button
 
-    def forward(self, speed=None):
+    def forward(self, speed=None, distance=None):
         """Move robot forward."""
         if not speed:
             speed = self.default_speed
 
         for m in self.motors:
             m.forward(speed)
+
+        if distance is not None:
+            time.sleep(distance / self.cps)
+            self.stop()
 
     def stop(self):
         """Stop robot."""
@@ -47,6 +56,22 @@ class Robot(object):
 
         self.stop()
         self.motors[0].forward(speed)
+
+        if angle is not None:
+            time.sleep(((self.width*math.pi) * (angle/360)) / self.cps)
+            self.motors[0].stop()
+
+    def right(self, speed=None, angle=None):
+        """Turn robot left."""
+        if not speed:
+            speed = self.default_speed
+
+        self.stop()
+        self.motors[1].forward(speed)
+
+        if angle is not None:
+            time.sleep(((self.width*math.pi) * (angle/360)) / self.cps)
+            self.motors[1].stop()
 
     def change_status(self, status):
         """Change status."""
