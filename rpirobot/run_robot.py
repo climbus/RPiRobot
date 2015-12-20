@@ -6,6 +6,10 @@ from robot import Robot
 from robot_modules import Led, Button, Motor
 
 
+#17,5 - 50 - 1
+#11,3 - 40 - 1
+#25 - 100 - 1
+
 class RobotRunner(object):
 
     """Run robot program."""
