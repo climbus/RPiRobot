@@ -41,7 +41,7 @@ class Robot(object):
             m.forward(speed)
 
         if distance is not None:
-            time.sleep(distance / self.cps)
+            time.sleep(float(distance) / float(self.cps))
             self.stop()
 
     def stop(self):
@@ -58,7 +58,7 @@ class Robot(object):
         self.motors[0].forward(speed)
 
         if angle is not None:
-            time.sleep(((self.width*math.pi) * (angle/360)) / self.cps)
+            time.sleep(((float(self.width)*math.pi) * (float(angle)/360)) / float(self.cps) * 2)
             self.motors[0].stop()
 
     def right(self, speed=None, angle=None):
@@ -70,7 +70,7 @@ class Robot(object):
         self.motors[1].forward(speed)
 
         if angle is not None:
-            time.sleep(((self.width*math.pi) * (angle/360)) / self.cps)
+            time.sleep(((float(self.width)*math.pi) * (float(angle)/360)) / float(self.cps) * 2)
             self.motors[1].stop()
 
     def change_status(self, status):
