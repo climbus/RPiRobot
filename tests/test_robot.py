@@ -2,11 +2,14 @@ import sys
 import os
 import unittest
 import time
+
 from mock import Mock, patch
 
 sys.path.append(os.path.abspath("."))
 sys.path.append(os.path.abspath("rpirobot"))
+
 from rpirobot.robot import Robot
+
 
 class TestRobot(unittest.TestCase):
 
@@ -45,17 +48,20 @@ class TestRobot(unittest.TestCase):
     def test_forward(self):
         self._set_motors()
         self.robot.forward()
-        self.assertEqual(self.motor.forward.call_count, 2)
+        self.assertTrue(self.robot.motors[0].forward.called)
+        self.assertTrue(self.robot.motors[1].forward.called)
 
     def test_forward_default_speed(self):
         self._set_motors()
         self.robot.forward()
-        self.motor.forward.called_with(self.robot.default_speed)
+        self.robot.motors[0].forward.called_with(self.robot.default_speed)
+        self.robot.motors[1].forward.called_with(self.robot.default_speed)
 
     def test_forward_with_speed(self):
         self._set_motors()
         self.robot.forward(50)
-        self.motor.forward.called_with(50)
+        self.robot.motors[0].forward.called_with(50)
+        self.robot.motors[1].forward.called_with(self.robot.default_speed)
 
     def test_robot_has_status(self):
         self.assertIsNotNone(self.robot.status)
@@ -103,41 +109,39 @@ class TestRobot(unittest.TestCase):
         self._set_motors()
         self.robot.set_led(Mock())
         self.robot.stop()
-        self.assertEqual(self.motor.stop.call_count, 2)
+        self.assertTrue(self.robot.motors[0].stop.called)
+        self.assertTrue(self.robot.motors[1].stop.called)
 
     def test_left(self):
         self.robot.set_led(Mock())
         self._set_motors()
-        self.robot.set_motor(0, Mock())
         self.robot.stop = Mock()
         self.robot.left()
         self.assertEqual(self.robot.stop.call_count, 1)
         self.assertEqual(self.robot.motors[0].forward.call_count, 1)
+        self.assertEqual(self.robot.motors[1].forward.call_count, 0)
 
     def test_right(self):
         self.robot.set_led(Mock())
         self._set_motors()
-        self.robot.set_motor(1, Mock())
         self.robot.stop = Mock()
         self.robot.right()
         self.assertEqual(self.robot.stop.call_count, 1)
         self.assertEqual(self.robot.motors[1].forward.call_count, 1)
+        self.assertEqual(self.robot.motors[0].forward.call_count, 0)
 
     def test_left_default_speed(self):
         self._set_motors()
-        self.robot.set_motor(0, Mock())
         self.robot.left()
         self.robot.motors[0].forward.assert_called_with(self.robot.default_speed)
 
     def test_left_with_speed(self):
         self._set_motors()
-        self.robot.set_motor(0, Mock())
         self.robot.left(50)
         self.robot.motors[0].forward.assert_called_with(50)
 
     def test_left_with_angle(self):
         self._set_motors()
-        self.robot.set_motor(0, Mock())
         self.robot.stop = Mock()
         self.robot.width = 13
         self.robot.cps = 10
@@ -147,7 +151,6 @@ class TestRobot(unittest.TestCase):
 
     def test_right_with_angle(self):
         self._set_motors()
-        self.robot.set_motor(1, Mock())
         self.robot.stop = Mock()
         self.robot.width = 13
         self.robot.cps = 10
@@ -157,13 +160,11 @@ class TestRobot(unittest.TestCase):
 
     def test_right_default_speed(self):
         self._set_motors()
-        self.robot.set_motor(1, Mock())
         self.robot.right()
         self.robot.motors[1].forward.assert_called_with(self.robot.default_speed)
 
     def test_right_with_speed(self):
         self._set_motors()
-        self.robot.set_motor(1, Mock())
         self.robot.right(50)
         self.robot.motors[1].forward.assert_called_with(50)
 
@@ -184,17 +185,20 @@ class TestRobot(unittest.TestCase):
     def test_back(self):
         self._set_motors()
         self.robot.back()
-        self.assertEqual(self.motor.backward.call_count, 2)
+        self.assertTrue(self.robot.motors[0].backward.called)
+        self.assertTrue(self.robot.motors[1].backward.called)
 
     def test_back_default_speed(self):
         self._set_motors()
         self.robot.back()
-        self.motor.back.called_with(self.robot.default_speed)
+        self.robot.motors[0].backward.assert_called_with(self.robot.default_speed)
+        self.robot.motors[1].backward.assert_called_with(self.robot.default_speed)
 
     def test_back_with_speed(self):
         self._set_motors()
         self.robot.back(50)
-        self.motor.back.called_with(50)
+        self.robot.motors[0].backward.assert_called_with(50)
+        self.robot.motors[1].backward.assert_called_with(50)
 
     def test_back_with_distance(self):
         self._set_motors()
@@ -239,8 +243,7 @@ class TestRobot(unittest.TestCase):
         self.assertIsNone(self.robot._angle_to_distance(None))
 
     def _set_motors(self):
-        self. motor = Mock()
-        self.robot.set_motors(self.motor, self.motor)
+        self.robot.set_motors(Mock(), Mock())
 
 if __name__ == '__main__':
     unittest.main()
