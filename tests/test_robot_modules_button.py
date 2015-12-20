@@ -52,8 +52,9 @@ class TestButton(unittest.TestCase):
 
     def test_is_button_hlod(self):
         self.btn.gpio.input = MagicMock(return_value=1)
+        self.btn.hold_time = 0.1
         tm = time.time()
-        while time.time() - tm < 4:
+        while time.time() - tm < 0.2:
             val = self.btn.is_hold()
             if val == 1:
                 break
@@ -61,8 +62,9 @@ class TestButton(unittest.TestCase):
 
     def test_is_not_hold(self):
         self.btn.gpio.input = MagicMock(return_value=0)
+        self.btn.hold_time = 0.1
         tm = time.time()
-        while time.time() - tm < 4:
+        while time.time() - tm < 0.2:
             val = self.btn.is_hold()
             if val == 1:
                 break

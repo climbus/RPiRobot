@@ -123,6 +123,7 @@ class Button(object):
 
     __gpio_module__ = GPIO
     time_set_status = None
+    hold_time = 3
 
     def __init__(self, pin):
         """Button constructor."""
@@ -147,7 +148,7 @@ class Button(object):
         if status == 1:
             if not self.time_set_status:
                 self.time_set_status = time.time()
-            if time.time() - self.time_set_status > 3:
+            if time.time() - self.time_set_status > self.hold_time:
                 self.time_set_status = time.time()
                 return 1
         else:

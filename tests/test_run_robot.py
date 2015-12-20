@@ -8,7 +8,7 @@ from mock import Mock, patch
 
 sys.path.append(os.path.abspath("."))
 sys.path.append(os.path.abspath("rpirobot"))
-from rpirobot.run_robot import RobotRunner, TimeoutError
+from rpirobot.run_robot import RobotRunner, TimeoutError, create_robot
 
 class timeout(object):
 
@@ -94,6 +94,19 @@ class TestiRunRobot(unittest.TestCase):
             except TimeoutError:
                 pass
         self.assertTrue(subprocess.call.called)
+
+    @patch('rpirobot.run_robot.Led')
+    @patch('rpirobot.run_robot.Button')
+    @patch('rpirobot.run_robot.Robot')
+    @patch('rpirobot.run_robot.Motor')
+    def test_create_robot(self, Led, Button, Robot, Motor):
+        robot = create_robot()
+        #self.assertTrue(Robot.__init__.called)
+        self.assertTrue(robot.set_led.called)
+        self.assertTrue(robot.led.set_color.called)
+        self.assertTrue(robot.led.on.called)
+        self.assertTrue(robot.set_button.called)
+        self.assertTrue(robot.set_motors.called)
 
 if __name__ == '__main__':
     unittest.main()
