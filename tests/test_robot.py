@@ -2,7 +2,7 @@ import sys
 import os
 import unittest
 import time
-from mock import Mock
+from mock import Mock, patch
 
 sys.path.append(os.path.abspath("."))
 sys.path.append(os.path.abspath("rpirobot"))
@@ -218,6 +218,25 @@ class TestRobot(unittest.TestCase):
         self.robot.default_speed = 10
         self.assertEqual(self.robot._get_speed(None), 10)
 
+    @patch("rpirobot.robot.time")
+    def test_go_for_distance(self, time):
+        self._set_motors()
+        distance = 10
+        self.robot.cps = 10
+        self.robot._go_for_distance(10)
+        time.sleep.assert_called_with(1)
+
+    @patch("rpirobot.robot.time")
+    def test_dont_go_if_distance_none(self, time):
+        self.robot._go_for_distance(None)
+        self.assertFalse(time.sleep.called)
+
+    def test_angle_to_distance(self):
+        self.robot.width = 10
+        self.assertEqual(round(self.robot._angle_to_distance(90)), 16)
+
+    def test_angle_to_distance_none(self):
+        self.assertIsNone(self.robot._angle_to_distance(None))
 
     def _set_motors(self):
         self. motor = Mock()

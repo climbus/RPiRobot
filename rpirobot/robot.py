@@ -39,9 +39,7 @@ class Robot(object):
         for m in self.motors:
             m.forward(speed)
 
-        if distance is not None:
-            time.sleep(float(distance) / float(self.cps))
-            self.stop()
+        self._go_for_distance(distance)
 
     def back(self, speed=None, distance=None):
         """Move robot backward."""
@@ -50,9 +48,7 @@ class Robot(object):
         for m in self.motors:
             m.backward(speed)
 
-        if distance is not None:
-            time.sleep(float(distance) / float(self.cps))
-            self.stop()
+        self._go_for_distance(distance)
 
     def stop(self):
         """Stop robot."""
@@ -66,9 +62,7 @@ class Robot(object):
         self.stop()
         self.motors[0].forward(speed)
 
-        if angle is not None:
-            time.sleep(((float(self.width)*math.pi) * (float(angle)/360)) / float(self.cps) * 2)
-            self.motors[0].stop()
+        self._go_for_distance(self._angle_to_distance(angle))
 
     def right(self, speed=None, angle=None):
         """Turn robot left."""
@@ -77,9 +71,7 @@ class Robot(object):
         self.stop()
         self.motors[1].forward(speed)
 
-        if angle is not None:
-            time.sleep(((float(self.width)*math.pi) * (float(angle)/360)) / float(self.cps) * 2)
-            self.motors[1].stop()
+        self._go_for_distance(self._angle_to_distance(angle))
 
     def change_status(self, status):
         """Change status."""
@@ -104,3 +96,16 @@ class Robot(object):
             return self.default_speed
         else:
             return speed
+
+    def _go_for_distance(self, distance):
+        if distance is None:
+            return
+        go_time = float(distance) / float(self.cps)
+        time.sleep(go_time)
+        self.stop()
+
+    def _angle_to_distance(self, angle):
+        if angle is None:
+            return angle
+        else:
+            return (float(self.width)*math.pi * 2) * (float(angle)/360)
