@@ -69,7 +69,7 @@ class TestRobot(unittest.TestCase):
         self.robot.change_status(1)
         self.assertEqual(self.robot.status, 1)
 
-    def test_led_changes_color_after_status_chanhe(self):
+    def test_led_changes_color_after_status_change(self):
         self.robot.set_led(Mock())
         self._set_motors()
         self.robot.change_status(1)
@@ -143,7 +143,7 @@ class TestRobot(unittest.TestCase):
         self.robot.cps = 10
         tm = time.time()
         self.robot.left(angle=90)
-        self.assertEqual(round(time.time() - tm), 1)
+        self.assertEqual(round(time.time() - tm), 2)
 
     def test_right_with_angle(self):
         self._set_motors()
@@ -153,7 +153,7 @@ class TestRobot(unittest.TestCase):
         self.robot.cps = 10
         tm = time.time()
         self.robot.right(angle=90)
-        self.assertEqual(round(time.time() - tm), 1)
+        self.assertEqual(round(time.time() - tm), 2)
 
     def test_right_default_speed(self):
         self._set_motors()
@@ -173,6 +173,51 @@ class TestRobot(unittest.TestCase):
         tm = time.time()
         self.robot.forward(distance=10)
         self.assertEqual(round(time.time() - tm), 1)
+
+    def test_forward_with_small_distance(self):
+        self._set_motors()
+        self.robot.cps = 10
+        tm = time.time()
+        self.robot.forward(distance=5)
+        self.assertEqual(round(time.time() - tm, 1), 0.5)
+
+    def test_back(self):
+        self._set_motors()
+        self.robot.back()
+        self.assertEqual(self.motor.backward.call_count, 2)
+
+    def test_back_default_speed(self):
+        self._set_motors()
+        self.robot.back()
+        self.motor.back.called_with(self.robot.default_speed)
+
+    def test_back_with_speed(self):
+        self._set_motors()
+        self.robot.back(50)
+        self.motor.back.called_with(50)
+
+    def test_back_with_distance(self):
+        self._set_motors()
+        self.robot.cps = 10
+        tm = time.time()
+        self.robot.back(distance=10)
+        self.assertEqual(round(time.time() - tm), 1)
+
+    def test_back_with_small_distance(self):
+        self._set_motors()
+        self.robot.cps = 10
+        tm = time.time()
+        self.robot.back(distance=5)
+        self.assertEqual(round(time.time() - tm, 1), 0.5)
+
+    def test_get_speed(self):
+        self.robot.default_speed = 10
+        self.assertEqual(self.robot._get_speed(20), 20)
+
+    def test_get_speed_none(self):
+        self.robot.default_speed = 10
+        self.assertEqual(self.robot._get_speed(None), 10)
+
 
     def _set_motors(self):
         self. motor = Mock()

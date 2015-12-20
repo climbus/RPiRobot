@@ -34,11 +34,21 @@ class Robot(object):
 
     def forward(self, speed=None, distance=None):
         """Move robot forward."""
-        if not speed:
-            speed = self.default_speed
+        speed = self._get_speed(speed)
 
         for m in self.motors:
             m.forward(speed)
+
+        if distance is not None:
+            time.sleep(float(distance) / float(self.cps))
+            self.stop()
+
+    def back(self, speed=None, distance=None):
+        """Move robot backward."""
+        speed = self._get_speed(speed)
+
+        for m in self.motors:
+            m.backward(speed)
 
         if distance is not None:
             time.sleep(float(distance) / float(self.cps))
@@ -51,8 +61,7 @@ class Robot(object):
 
     def left(self, speed=None, angle=None):
         """Turn robot left."""
-        if not speed:
-            speed = self.default_speed
+        speed = self._get_speed(speed)
 
         self.stop()
         self.motors[0].forward(speed)
@@ -63,8 +72,7 @@ class Robot(object):
 
     def right(self, speed=None, angle=None):
         """Turn robot left."""
-        if not speed:
-            speed = self.default_speed
+        speed = self._get_speed(speed)
 
         self.stop()
         self.motors[1].forward(speed)
@@ -89,3 +97,10 @@ class Robot(object):
             self.change_status(1)
         else:
             self.change_status(-1)
+
+    def _get_speed(self, speed):
+        """Set speed to default if None."""
+        if not speed:
+            return self.default_speed
+        else:
+            return speed
