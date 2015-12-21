@@ -84,14 +84,9 @@ class Robot(object):
 
     def change_status(self, status):
         """Change status."""
-        self.led.set_color(self.colors[status])
-        self.led.on()
         self.status = status
 
         self._on_status_change(status)
-
-        if status == -1:
-            self._stop_motors()
 
     def toggle_status(self):
         """Toggle status: on(0), off(-1)."""
@@ -126,4 +121,8 @@ class Robot(object):
 
     def _on_status_change(self, status):
         """On change status observer."""
-        pass
+        self.led.set_color(self.colors[status])
+        self.led.on()
+
+        if status == -1:
+            self._stop_motors()

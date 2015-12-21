@@ -300,8 +300,19 @@ class TestRobot(unittest.TestCase):
         self.assertTrue(self.robot.motors[0].stop.called)
         self.assertTrue(self.robot.motors[1].stop.called)
 
-    def test_on_status_change(self):
-        pass
+    def test_on_status_change_1(self):
+        self.robot.set_led(Mock())
+        self.robot._on_status_change(1)
+        self.assertTrue(self.robot.led.set_color.called)
+        self.assertTrue(self.robot.led.on.called)
+
+    def test_on_status_change_minus_1(self):
+        self.robot.set_led(Mock())
+        self.robot._stop_motors = Mock()
+        self.robot._on_status_change(-1)
+        self.assertTrue(self.robot.led.set_color.called)
+        self.assertTrue(self.robot.led.on.called)
+        self.assertTrue(self.robot._stop_motors.called)
 
     def test_change_status_triggers_on_status_change(self):
         self.robot.set_led(Mock())
