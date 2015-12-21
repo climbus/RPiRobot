@@ -47,8 +47,10 @@ class TestRobot(unittest.TestCase):
 
     def test_forward(self):
         self.robot.change_status = Mock()
+        self.robot._stop_motors = Mock()
         self._set_motors()
         self.robot.forward()
+        self.assertTrue(self.robot._stop_motors.called)
         self.assertTrue(self.robot.motors[0].forward.called)
         self.assertTrue(self.robot.motors[1].forward.called)
 
@@ -87,10 +89,10 @@ class TestRobot(unittest.TestCase):
 
     def test_should_stop_on_status_minus_1(self):
         self.robot.set_led(Mock())
+        self.robot._stop_motors = Mock()
         self._set_motors()
         self.robot.change_status(-1)
-        self.assertTrue(self.robot.motors[0].stop.called)
-        self.assertTrue(self.robot.motors[1].stop.called)
+        self.assertTrue(self.robot._stop_motors.called)
 
     def test_could_toggle_status(self):
         self._set_motors()
@@ -104,27 +106,25 @@ class TestRobot(unittest.TestCase):
     def test_stop(self):
         self._set_motors()
         self.robot.set_led(Mock())
+        self.robot._stop_motors = Mock()
         self.robot.stop()
-        self.assertTrue(self.robot.motors[0].stop.called)
-        self.assertTrue(self.robot.motors[1].stop.called)
+        self.assertTrue(self.robot._stop_motors.called)
 
     def test_left(self):
         self.robot.set_led(Mock())
         self._set_motors()
-        self.robot.stop = Mock()
+        self.robot._stop_motors = Mock()
         self.robot.left()
-        self.assertEqual(self.robot.motors[0].stop.call_count, 1)
-        self.assertEqual(self.robot.motors[1].stop.call_count, 1)
+        self.assertTrue(self.robot._stop_motors.called)
         self.assertEqual(self.robot.motors[0].forward.call_count, 1)
         self.assertEqual(self.robot.motors[1].forward.call_count, 0)
 
     def test_right(self):
         self.robot.set_led(Mock())
         self._set_motors()
-        self.robot.stop = Mock()
+        self.robot._stop_motors = Mock()
         self.robot.right()
-        self.assertEqual(self.robot.motors[0].stop.call_count, 1)
-        self.assertEqual(self.robot.motors[1].stop.call_count, 1)
+        self.assertTrue(self.robot._stop_motors.called)
         self.assertEqual(self.robot.motors[1].forward.call_count, 1)
         self.assertEqual(self.robot.motors[0].forward.call_count, 0)
 
@@ -207,7 +207,9 @@ class TestRobot(unittest.TestCase):
 
     def test_back(self):
         self._set_motors()
+        self.robot._stop_motors = Mock()
         self.robot.back()
+        self.assertTrue(self.robot._stop_motors.called)
         self.assertTrue(self.robot.motors[0].backward.called)
         self.assertTrue(self.robot.motors[1].backward.called)
 
@@ -292,6 +294,11 @@ class TestRobot(unittest.TestCase):
         self.robot.forward()
         self.assertEqual(self.robot.status, 1)
 
+    def test_stop_motors(self):
+        self._set_motors()
+        self.robot._stop_motors()
+        self.assertTrue(self.robot.motors[0].stop.called)
+        self.assertTrue(self.robot.motors[1].stop.called)
 
     def _set_motors(self):
         self.robot.set_motors(Mock(), Mock())

@@ -38,6 +38,8 @@ class Robot(object):
 
         self.change_status(1)
 
+        self._stop_motors()
+
         for m in self.motors:
             m.forward(speed)
 
@@ -47,6 +49,8 @@ class Robot(object):
         """Move robot backward."""
         speed = self._get_speed(speed)
 
+        self._stop_motors()
+
         for m in self.motors:
             m.backward(speed)
 
@@ -54,8 +58,7 @@ class Robot(object):
 
     def stop(self):
         """Stop robot."""
-        for m in self.motors:
-            m.stop()
+        self._stop_motors()
 
         self.change_status(0)
 
@@ -63,8 +66,7 @@ class Robot(object):
         """Turn robot left."""
         speed = self._get_speed(speed)
 
-        for m in self.motors:
-            m.stop()
+        self._stop_motors()
 
         self.motors[0].forward(speed)
 
@@ -74,8 +76,7 @@ class Robot(object):
         """Turn robot left."""
         speed = self._get_speed(speed)
 
-        for m in self.motors:
-            m.stop()
+        self._stop_motors()
 
         self.motors[1].forward(speed)
 
@@ -88,8 +89,7 @@ class Robot(object):
         self.status = status
 
         if status == -1:
-            for m in self.motors:
-                m.stop()
+            self._stop_motors()
 
     def toggle_status(self):
         """Toggle status: on(0), off(-1)."""
@@ -117,3 +117,7 @@ class Robot(object):
             return angle
         else:
             return (float(self.width)*math.pi * 2) * (float(angle)/360)
+
+    def _stop_motors(self):
+        for m in self.motors:
+            m.stop()
