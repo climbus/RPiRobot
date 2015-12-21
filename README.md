@@ -6,5 +6,6 @@ Robot on wheels controlled by RaspberryPi.
 
 It has RGB led, button, two motors and distance meter.
 
+## Schema
 
-.. image:: img/RPIRobot.svg
+![alt tag](https://raw.githubusercontent.com/climbus/RPiRobot/master/img/RPIRobot.png)
