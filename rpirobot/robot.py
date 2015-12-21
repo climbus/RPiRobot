@@ -36,6 +36,8 @@ class Robot(object):
         """Move robot forward."""
         speed = self._get_speed(speed)
 
+        self.change_status(1)
+
         for m in self.motors:
             m.forward(speed)
 
@@ -55,11 +57,15 @@ class Robot(object):
         for m in self.motors:
             m.stop()
 
+        self.change_status(0)
+
     def left(self, angle=None, speed=None):
         """Turn robot left."""
         speed = self._get_speed(speed)
 
-        self.stop()
+        for m in self.motors:
+            m.stop()
+
         self.motors[0].forward(speed)
 
         self._go_for_distance(self._angle_to_distance(angle))
@@ -68,7 +74,9 @@ class Robot(object):
         """Turn robot left."""
         speed = self._get_speed(speed)
 
-        self.stop()
+        for m in self.motors:
+            m.stop()
+
         self.motors[1].forward(speed)
 
         self._go_for_distance(self._angle_to_distance(angle))
@@ -78,10 +86,10 @@ class Robot(object):
         self.led.set_color(self.colors[status])
         self.led.on()
         self.status = status
-        if status == 1:
-            self.forward()
+
         if status == -1:
-            self.stop()
+            for m in self.motors:
+                m.stop()
 
     def toggle_status(self):
         """Toggle status: on(0), off(-1)."""

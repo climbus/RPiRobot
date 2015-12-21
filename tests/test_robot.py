@@ -46,18 +46,21 @@ class TestRobot(unittest.TestCase):
         self.assertEqual(self.robot.button, button)
 
     def test_forward(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.forward()
         self.assertTrue(self.robot.motors[0].forward.called)
         self.assertTrue(self.robot.motors[1].forward.called)
 
     def test_forward_default_speed(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.forward()
         self.robot.motors[0].forward.called_with(self.robot.default_speed)
         self.robot.motors[1].forward.called_with(self.robot.default_speed)
 
     def test_forward_with_speed(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.forward(speed=50)
         self.robot.motors[0].forward.called_with(50)
@@ -81,13 +84,6 @@ class TestRobot(unittest.TestCase):
         self.robot.change_status(1)
         self.assertTrue(self.robot.led.set_color.called)
         self.assertTrue(self.robot.led.on.called)
-
-    def test_sholud_run_motors_on_status_1(self):
-        self.robot.set_led(Mock())
-        self._set_motors()
-        self.robot.change_status(1)
-        self.assertTrue(self.robot.motors[0].forward.called)
-        self.assertTrue(self.robot.motors[1].forward.called)
 
     def test_should_stop_on_status_minus_1(self):
         self.robot.set_led(Mock())
@@ -117,7 +113,8 @@ class TestRobot(unittest.TestCase):
         self._set_motors()
         self.robot.stop = Mock()
         self.robot.left()
-        self.assertEqual(self.robot.stop.call_count, 1)
+        self.assertEqual(self.robot.motors[0].stop.call_count, 1)
+        self.assertEqual(self.robot.motors[1].stop.call_count, 1)
         self.assertEqual(self.robot.motors[0].forward.call_count, 1)
         self.assertEqual(self.robot.motors[1].forward.call_count, 0)
 
@@ -126,7 +123,8 @@ class TestRobot(unittest.TestCase):
         self._set_motors()
         self.robot.stop = Mock()
         self.robot.right()
-        self.assertEqual(self.robot.stop.call_count, 1)
+        self.assertEqual(self.robot.motors[0].stop.call_count, 1)
+        self.assertEqual(self.robot.motors[1].stop.call_count, 1)
         self.assertEqual(self.robot.motors[1].forward.call_count, 1)
         self.assertEqual(self.robot.motors[0].forward.call_count, 0)
 
@@ -185,6 +183,7 @@ class TestRobot(unittest.TestCase):
         self.assertEqual(round(self.robot._go_for_distance.call_args[0][0]), 11)
 
     def test_forward_with_distance(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.cps = 10
         tm = time.time()
@@ -192,6 +191,7 @@ class TestRobot(unittest.TestCase):
         self.assertEqual(round(time.time() - tm), 1)
 
     def test_forward_with_small_distance(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.cps = 10
         tm = time.time()
@@ -199,6 +199,7 @@ class TestRobot(unittest.TestCase):
         self.assertEqual(round(time.time() - tm, 1), 0.5)
 
     def test_forward_first_param_distance(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot._go_for_distance = Mock()
         self.robot.forward(50)
@@ -211,18 +212,21 @@ class TestRobot(unittest.TestCase):
         self.assertTrue(self.robot.motors[1].backward.called)
 
     def test_back_default_speed(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.back()
         self.robot.motors[0].backward.assert_called_with(self.robot.default_speed)
         self.robot.motors[1].backward.assert_called_with(self.robot.default_speed)
 
     def test_back_with_speed(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.back(speed=50)
         self.robot.motors[0].backward.assert_called_with(50)
         self.robot.motors[1].backward.assert_called_with(50)
 
     def test_back_with_distance(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.cps = 10
         tm = time.time()
@@ -230,6 +234,7 @@ class TestRobot(unittest.TestCase):
         self.assertEqual(round(time.time() - tm), 1)
 
     def test_back_first_param_distance(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot._go_for_distance = Mock()
         self.robot.back(50)
@@ -237,6 +242,7 @@ class TestRobot(unittest.TestCase):
 
 
     def test_back_with_small_distance(self):
+        self.robot.change_status = Mock()
         self._set_motors()
         self.robot.cps = 10
         tm = time.time()
@@ -253,6 +259,7 @@ class TestRobot(unittest.TestCase):
 
     @patch("rpirobot.robot.time")
     def test_go_for_distance(self, time):
+        self.robot.set_led(Mock())
         self._set_motors()
         distance = 10
         self.robot.cps = 10
@@ -270,6 +277,21 @@ class TestRobot(unittest.TestCase):
 
     def test_angle_to_distance_none(self):
         self.assertIsNone(self.robot._angle_to_distance(None))
+
+    def test_stop_changes_status(self):
+        self.robot.set_led(Mock())
+        self._set_motors()
+        self.robot.status = None
+        self.robot.stop()
+        self.assertEqual(self.robot.status, 0)
+
+    def test_forward_changes_status(self):
+        self.robot.set_led(Mock())
+        self._set_motors()
+        self.robot.status = None
+        self.robot.forward()
+        self.assertEqual(self.robot.status, 1)
+
 
     def _set_motors(self):
         self.robot.set_motors(Mock(), Mock())
