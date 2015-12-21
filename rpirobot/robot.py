@@ -32,7 +32,7 @@ class Robot(object):
         """Set button object."""
         self.button = button
 
-    def forward(self, speed=None, distance=None):
+    def forward(self, distance=None, speed=None):
         """Move robot forward."""
         speed = self._get_speed(speed)
 
@@ -41,7 +41,7 @@ class Robot(object):
 
         self._go_for_distance(distance)
 
-    def back(self, speed=None, distance=None):
+    def back(self, distance=None, speed=None):
         """Move robot backward."""
         speed = self._get_speed(speed)
 
@@ -55,7 +55,7 @@ class Robot(object):
         for m in self.motors:
             m.stop()
 
-    def left(self, speed=None, angle=None):
+    def left(self, angle=None, speed=None):
         """Turn robot left."""
         speed = self._get_speed(speed)
 
@@ -64,7 +64,7 @@ class Robot(object):
 
         self._go_for_distance(self._angle_to_distance(angle))
 
-    def right(self, speed=None, angle=None):
+    def right(self, angle=None, speed=None):
         """Turn robot left."""
         speed = self._get_speed(speed)
 
