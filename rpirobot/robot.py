@@ -88,6 +88,8 @@ class Robot(object):
         self.led.on()
         self.status = status
 
+        self._on_status_change(status)
+
         if status == -1:
             self._stop_motors()
 
@@ -121,3 +123,7 @@ class Robot(object):
     def _stop_motors(self):
         for m in self.motors:
             m.stop()
+
+    def _on_status_change(self, status):
+        """On change status observer."""
+        pass
