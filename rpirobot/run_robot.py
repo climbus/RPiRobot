@@ -1,9 +1,12 @@
 import subprocess
 
+import sys
+print(sys.path)
+
 import RPi.GPIO as GPIO
 
-from robot import Robot
-from robot_modules import Led, Button, Motor
+from rpirobot.robot import Robot
+from rpirobot.robot_modules import Led, Button, Motor
 
 
 class TimeoutError(Exception):
